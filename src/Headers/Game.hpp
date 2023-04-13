@@ -2,12 +2,20 @@
 #define GAME_H
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <libconfig.h++>
 
 class Game
 {
   private:
     sf::RenderWindow* window;
     sf::Event sfEvent;
+    sf::View view;
+
+    // View
+
+    // Initalizers
+    void initWindow();
 
   public:
     // Constructor and Destructor

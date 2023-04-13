@@ -1,25 +1,56 @@
 #include "../Headers/Game.hpp"
 
-// Constants
+// Initializers
 
-const unsigned int WINDOW_WIDTH  = 800;
-const unsigned int WINDOW_HEIGHT = 600;
-const char*        WINDOW_TITLE  = "SFML";
-const unsigned int WINDOW_FPS    = 60;
-const bool         WINDOW_VSYNC  = false;
+void Game::initWindow()
+{
+  // Reading the window config file
+  libconfig::Config windowConfig;
+  try
+  {
+    windowConfig.readFile("config/Window.cfg");
+  }
+  catch (const libconfig::FileIOException &ioException)
+  {
+    std::cerr << "I/O error when reading the configuration file." << std::endl;
+    return;
+  }
+  catch (const libconfig::ParseException &parseException)
+  {
+    std::cerr << "Parse error at " << parseException.getFile() << ": " << parseException.getLine()  << " - " << parseException.getError() << std::endl;
+    return;
+  }
+
+  // Declaring the window properties as variables
+  unsigned int windowWidth;
+  unsigned int windowHeight;
+  std::string windowTitle;
+  unsigned int windowFps;
+  bool windowVSync;
+
+  // Loading the variables from the config file
+  windowConfig.lookupValue("width", windowWidth);
+  windowConfig.lookupValue("height", windowHeight);
+  windowConfig.lookupValue("title", windowTitle);
+  windowConfig.lookupValue("fps", windowFps);
+  windowConfig.lookupValue("vsync", windowVSync);
+
+  // Creating and setting up the window
+  this->window = new sf::RenderWindow(
+    sf::VideoMode(windowWidth, windowHeight),
+    windowTitle,
+    sf::Style::Titlebar | sf::Style::Close
+  );
+  this->window->setVerticalSyncEnabled(windowVSync);
+  this->window->setFramerateLimit(windowFps);
+  this->view.setSize(sf::Vector2f(windowWidth, windowHeight));
+}
 
 // Constructor and Destructor
 
 Game::Game()
 {
-  // Creating the SFML Window
-  this->window = new sf::RenderWindow(
-    sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
-    WINDOW_TITLE,
-    sf::Style::Titlebar | sf::Style::Close
-  );
-  this->window->setFramerateLimit(WINDOW_FPS);
-  this->window->setVerticalSyncEnabled(WINDOW_VSYNC);
+  this->initWindow();
 }
 
 Game::~Game()
