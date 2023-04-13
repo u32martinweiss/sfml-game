@@ -7,6 +7,7 @@
 
 #include "../Constants.hpp"
 #include "Player.hpp"
+#include "BackgroundRect.hpp"
 #include "Manager.hpp"
 
 class Game
@@ -15,6 +16,7 @@ class Game
     sf::RenderWindow* window;
     sf::Event sfEvent;
     sf::View view;
+    BackgroundRect* mainBackgroundRect;
 
     // Player
     Player player;

@@ -59,6 +59,7 @@ sf::Texture loadTexture(std::string path)
 void Game::initTextures()
 {
   this->textureManager.add("player", loadTexture("assets/Textures/player.png"));
+  this->textureManager.add("grass", loadTexture("assets/Textures/grass.png"));
 }
 
 sf::Font loadFont(std::string path)
@@ -92,11 +93,18 @@ Game::Game()
   this->initFonts();
   this->initTexts();
   this->player.setTexture(&this->textureManager.get("player"));
+
+  this->mainBackgroundRect = new BackgroundRect(
+    sf::Vector2f(0.f, 0.f),
+    sf::Vector2f(TILE_SIZE * 12, TILE_SIZE * 12),
+    &this->textureManager.get("grass")
+  );
 }
 
 Game::~Game()
 {
   delete this->window;
+  delete this->mainBackgroundRect;
 }
 
 // Accessors
@@ -202,6 +210,7 @@ void Game::renderTexts()
 void Game::render()
 {
   this->window->clear();
+  this->mainBackgroundRect->render(*this->window);
   this->player.render(*this->window);
   this->renderTexts();
   this->window->display();
