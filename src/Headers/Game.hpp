@@ -39,6 +39,8 @@ class Game
 
     // Update Functions
     void updateSFMLEvent();
+    void updateClocks();
+    void updateKeys();
     void update();
 
     // Render Functions
