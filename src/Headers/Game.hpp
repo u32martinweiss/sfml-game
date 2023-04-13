@@ -5,6 +5,7 @@
 #include <iostream>
 #include <libconfig.h++>
 
+#include "../Constants.hpp"
 #include "Player.hpp"
 #include "Manager.hpp"
 
@@ -20,6 +21,10 @@ class Game
 
     // Managers
     Manager<sf::Texture> textureManager;
+    Manager<sf::Font> fontManager;
+
+    // Texts
+    sf::Text positionText;
 
     // Clocks
     sf::Clock dtClock;
@@ -28,6 +33,8 @@ class Game
     // Initalizers
     void initWindow();
     void initTextures();
+    void initFonts();
+    void initTexts();
 
   public:
     // Constructor and Destructor
@@ -41,9 +48,11 @@ class Game
     void updateSFMLEvent();
     void updateClocks();
     void updateKeys();
+    void updateTexts();
     void update();
 
     // Render Functions
+    void renderTexts();
     void render();
 
     // Functions
