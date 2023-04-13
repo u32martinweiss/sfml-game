@@ -58,6 +58,13 @@ Game::~Game()
   delete this->window;
 }
 
+// Accessors
+
+const float Game::getDt() const
+{
+  return this->dt;
+}
+
 // Update Functions
 
 void Game::updateSFMLEvent()

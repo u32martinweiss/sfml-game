@@ -19,7 +19,9 @@ add_executable(
   src/Main.cpp
   src/Classes/Game.cpp
   src/Classes/Entity.cpp
+  src/Classes/Player.cpp
   src/Headers/Game.hpp
   src/Headers/Entity.hpp
+  src/Headers/Player.hpp
 )
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-audio config++)

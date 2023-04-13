@@ -12,7 +12,9 @@ class Game
     sf::Event sfEvent;
     sf::View view;
 
-    // View
+    // Clocks
+    sf::Clock dtClock;
+    float dt;
 
     // Initalizers
     void initWindow();
@@ -21,6 +23,9 @@ class Game
     // Constructor and Destructor
     Game();
     virtual ~Game();
+
+    // Accessors
+    const float getDt() const;
 
     // Update Functions
     void updateSFMLEvent();
