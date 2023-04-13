@@ -5,6 +5,9 @@
 #include <iostream>
 #include <libconfig.h++>
 
+#include "Player.hpp"
+#include "Manager.hpp"
+
 class Game
 {
   private:
@@ -12,12 +15,19 @@ class Game
     sf::Event sfEvent;
     sf::View view;
 
+    // Player
+    Player player;
+
+    // Managers
+    Manager<sf::Texture> textureManager;
+
     // Clocks
     sf::Clock dtClock;
     float dt;
 
     // Initalizers
     void initWindow();
+    void initTextures();
 
   public:
     // Constructor and Destructor

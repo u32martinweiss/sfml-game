@@ -12,7 +12,7 @@ extern Game game;
 void Player::initShape()
 {
   this->shape.setSize(sf::Vector2f(TILE_SIZE, TILE_SIZE));
-  this->shape.setPosition(sf::Vector2f(TILE_SIZE * 9, TILE_SIZE * 2));
+  this->shape.setPosition(sf::Vector2f(0.f, 0.f));
 }
 
 // Constructor
