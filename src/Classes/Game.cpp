@@ -118,6 +118,10 @@ void Game::updateSFMLEvent()
         this->window->close();
         break;
 
+      case sf::Event::Resized:
+        this->view.setSize(sf::Vector2f(sfEvent.size.width, sfEvent.size.height));
+        break;
+
       default:
         break;
     }
@@ -155,6 +159,16 @@ void Game::updateKeys()
   this->player.move(finalMovementVector);
 }
 
+void Game::updateView()
+{
+  // Centering the camera
+  this->view.setCenter(sf::Vector2f(
+    this->player.getBounds().left + this->player.getBounds().width / 2,
+    this->player.getBounds().top + this->player.getBounds().height / 2
+  ));
+  this->window->setView(this->view);
+}
+
 void Game::updateTexts()
 {
   sf::Vector2f playerPosition = this->player.getPosition();
@@ -162,6 +176,10 @@ void Game::updateTexts()
   this->positionText.setString(
     "Position\n\nX: " + std::to_string(roundedPosition.x) + "\nY: " + std::to_string(roundedPosition.y)
   );
+  this->positionText.setPosition(sf::Vector2f(
+    this->view.getCenter().x - this->view.getSize().x / 2 + 8.f,
+    this->view.getCenter().y - this->view.getSize().y / 2 + 8.f
+  ));
 }
 
 void Game::update()
@@ -169,8 +187,9 @@ void Game::update()
   this->updateSFMLEvent();
   this->updateClocks();
   this->updateKeys();
-  this->updateTexts();
   this->player.update();
+  this->updateView();
+  this->updateTexts();
 }
 
 // Render Functions
