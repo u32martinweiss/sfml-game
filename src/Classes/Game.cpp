@@ -46,16 +46,40 @@ void Game::initWindow()
   this->view.setSize(sf::Vector2f(windowWidth, windowHeight));
 }
 
+sf::Texture loadTexture(std::string path)
+{
+  sf::Texture loadedTexture;
+  if (!loadedTexture.loadFromFile(path))
+  {
+    std::cout << "ERROR::GAME::CANT_LOAD_TEXTURE" << std::endl;
+  }
+  return loadedTexture;
+}
+
+void Game::initTextures()
+{
+  this->textureManager.add("player", loadTexture("assets/Textures/player.png"));
+}
+
 // Constructor and Destructor
 
 Game::Game()
 {
   this->initWindow();
+  this->initTextures();
+  this->player.setTexture(&this->textureManager.get("player"));
 }
 
 Game::~Game()
 {
   delete this->window;
+}
+
+// Accessors
+
+const float Game::getDt() const
+{
+  return this->dt;
 }
 
 // Update Functions
@@ -79,6 +103,7 @@ void Game::updateSFMLEvent()
 void Game::update()
 {
   this->updateSFMLEvent();
+  this->player.update();
 }
 
 // Render Functions
@@ -86,6 +111,7 @@ void Game::update()
 void Game::render()
 {
   this->window->clear();
+  this->player.render(*this->window);
   this->window->display();
 }
 
