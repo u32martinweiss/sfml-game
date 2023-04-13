@@ -79,9 +79,15 @@ void Game::initFonts()
 
 void Game::initTexts()
 {
+  // Position Text
   this->positionText.setFont(this->fontManager.get("terminus"));
   this->positionText.setFillColor(sf::Color::White);
   this->positionText.setCharacterSize(BASE_FONT_SIZE);
+
+  // FPS Text
+  this->fpsText.setFont(this->fontManager.get("terminus"));
+  this->fpsText.setFillColor(sf::Color::White);
+  this->fpsText.setCharacterSize(BASE_FONT_SIZE);
 }
 
 // Constructor and Destructor
@@ -179,14 +185,24 @@ void Game::updateView()
 
 void Game::updateTexts()
 {
+  // Position Text
   sf::Vector2f playerPosition = this->player.getPosition();
   sf::Vector2i roundedPosition = sf::Vector2i(playerPosition);
+  int fps = round(1.f / this->dt);
+
   this->positionText.setString(
     "Position\n\nX: " + std::to_string(roundedPosition.x) + "\nY: " + std::to_string(roundedPosition.y)
   );
   this->positionText.setPosition(sf::Vector2f(
     this->view.getCenter().x - this->view.getSize().x / 2 + 8.f,
     this->view.getCenter().y - this->view.getSize().y / 2 + 8.f
+  ));
+
+  // FPS Text
+  this->fpsText.setString("FPS: " + std::to_string(fps));
+  this->fpsText.setPosition(sf::Vector2f(
+    this->view.getCenter().x - this->view.getSize().x / 2 + 8.f,
+    this->view.getCenter().y + this->view.getSize().y / 2 - this->fpsText.getGlobalBounds().height - 8.f
   ));
 }
 
@@ -205,6 +221,7 @@ void Game::update()
 void Game::renderTexts()
 {
   this->window->draw(this->positionText);
+  this->window->draw(this->fpsText);
 }
 
 void Game::render()

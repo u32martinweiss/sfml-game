@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <math.h>
 #include <libconfig.h++>
 
 #include "../Constants.hpp"
@@ -27,6 +28,7 @@ class Game
 
     // Texts
     sf::Text positionText;
+    sf::Text fpsText;
 
     // Clocks
     sf::Clock dtClock;
