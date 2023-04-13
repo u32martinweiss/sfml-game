@@ -1,0 +1,40 @@
+# C++ Compiled Object Files
+*.o
+*.obj
+
+# C++ Compiled Static Libraries
+*.a
+*.lib
+
+# C++ Compiled Dynamic Libraries/Shared Objects
+*.so
+*.dll
+*.dylib
+
+# Executable Files
+*.exe
+*.out
+
+# Build Directory
+/build/
+
+# Dependency Directories
+/deps/
+/vendor/
+
+# IDE Files and Directories
+.vscode/
+.idea/
+*.sln
+*.vcxproj
+*.user
+*.suo
+*.sdf
+*.opensdf
+
+# Miscellaneous
+*.log
+*.tmp
+*.bak
+*.swp
+*.DS_Store
