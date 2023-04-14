@@ -7,7 +7,7 @@ set(PROJECT_NAME "sfml-game")
 # Project Name
 project(${PROJECT_NAME})
 
-# C++ Standart
+# C++ Standard
 set(CMAKE_CXX_STANDARD 11)
 
 # Packages
@@ -27,5 +27,8 @@ add_executable(
   src/Headers/Player.hpp
   src/Headers/Manager.hpp
   src/Headers/BackgroundRect.hpp
+  src/Structs/InventoryItem.hpp
+  src/Constants.hpp
 )
-target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-audio config++)
+target_include_directories(${PROJECT_NAME} PUBLIC src)
+target_link_libraries(${PROJECT_NAME} PUBLIC sfml-graphics sfml-audio config++)

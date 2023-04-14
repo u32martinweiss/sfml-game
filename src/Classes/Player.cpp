@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <math.h>
 
-#include "../Constants.hpp"
 #include "../Headers/Player.hpp"
 #include "../Headers/Game.hpp"
 

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <sstream>
 #include <math.h>
 #include <libconfig.h++>
 
@@ -10,6 +11,7 @@
 #include "Player.hpp"
 #include "BackgroundRect.hpp"
 #include "Manager.hpp"
+#include "../Structs/InventoryItem.hpp"
 
 class Game
 {
@@ -21,14 +23,16 @@ class Game
 
     // Player
     Player player;
+    InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
 
     // Managers
     Manager<sf::Texture> textureManager;
     Manager<sf::Font> fontManager;
 
     // Texts
-    sf::Text positionText;
-    sf::Text fpsText;
+    sf::Text debugText;
+    sf::Text inventoryText;
+    sf::Text versionText;
 
     // Clocks
     sf::Clock dtClock;
@@ -54,6 +58,7 @@ class Game
     void updateKeys();
     void updateView();
     void updateTexts();
+    void updateInventory();
     void update();
 
     // Render Functions

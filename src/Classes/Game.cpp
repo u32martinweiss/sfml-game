@@ -1,3 +1,4 @@
+#include "../Constants.hpp"
 #include "../Headers/Game.hpp"
 
 // Initializers
@@ -79,15 +80,27 @@ void Game::initFonts()
 
 void Game::initTexts()
 {
-  // Position Text
-  this->positionText.setFont(this->fontManager.get("terminus"));
-  this->positionText.setFillColor(sf::Color::White);
-  this->positionText.setCharacterSize(BASE_FONT_SIZE);
+  // Debug Text
+  this->debugText.setFont(this->fontManager.get("terminus"));
+  this->debugText.setFillColor(sf::Color::White);
+  this->debugText.setCharacterSize(BASE_FONT_SIZE);
+  this->debugText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS); 	
 
-  // FPS Text
-  this->fpsText.setFont(this->fontManager.get("terminus"));
-  this->fpsText.setFillColor(sf::Color::White);
-  this->fpsText.setCharacterSize(BASE_FONT_SIZE);
+  // Inventory Text
+  this->inventoryText.setFont(this->fontManager.get("terminus"));
+  this->inventoryText.setFillColor(sf::Color::White);
+  this->inventoryText.setCharacterSize(BASE_FONT_SIZE);
+  this->inventoryText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS); 	
+
+  // Version Text
+  this->versionText.setFont(this->fontManager.get("terminus"));
+  this->versionText.setFillColor(sf::Color::White);
+  this->versionText.setCharacterSize(BASE_FONT_SIZE);
+  this->versionText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS);
+
+  std::stringstream versionStream;
+  versionStream << GAME_TITLE << '\n' << GAME_VERSION;
+  this->versionText.setString(versionStream.str());
 }
 
 // Constructor and Destructor
@@ -185,25 +198,41 @@ void Game::updateView()
 
 void Game::updateTexts()
 {
-  // Position Text
   sf::Vector2f playerPosition = this->player.getPosition();
   sf::Vector2i roundedPosition = sf::Vector2i(playerPosition);
   int fps = round(1.f / this->dt);
 
-  this->positionText.setString(
-    "Position\n\nX: " + std::to_string(roundedPosition.x) + "\nY: " + std::to_string(roundedPosition.y)
+  // Debug Text
+  this->debugText.setString(
+    "Position\n\nX: " + std::to_string(roundedPosition.x) + "\nY: " + std::to_string(roundedPosition.y) + "\n\nFPS: " + std::to_string(fps)
   );
-  this->positionText.setPosition(sf::Vector2f(
+  this->debugText.setPosition(sf::Vector2f(
     this->view.getCenter().x - this->view.getSize().x / 2 + 8.f,
     this->view.getCenter().y - this->view.getSize().y / 2 + 8.f
   ));
 
-  // FPS Text
-  this->fpsText.setString("FPS: " + std::to_string(fps));
-  this->fpsText.setPosition(sf::Vector2f(
+  // Inventory Text
+  this->inventoryText.setPosition(sf::Vector2f(
     this->view.getCenter().x - this->view.getSize().x / 2 + 8.f,
-    this->view.getCenter().y + this->view.getSize().y / 2 - this->fpsText.getGlobalBounds().height - 8.f
+    this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryText.getGlobalBounds().height - 8.f
   ));
+
+  // Version Text
+  this->versionText.setPosition(sf::Vector2f(
+    this->view.getCenter().x + this->view.getSize().x / 2 - this->versionText.getGlobalBounds().width - 8.f,
+    this->view.getCenter().y - this->view.getSize().y / 2 + 8.f
+  ));
+}
+
+void Game::updateInventory()
+{
+  std::stringstream inventoryStream;
+  for (int i = 0; i < PLAYER_INVENTORY_SIZE; i++)
+  {
+    inventoryStream << i + 1 << ") " << this->playerInventory[i].name;
+    if (i != PLAYER_INVENTORY_SIZE - 1) inventoryStream << '\n';
+  }
+  this->inventoryText.setString(inventoryStream.str());
 }
 
 void Game::update()
@@ -213,6 +242,7 @@ void Game::update()
   this->updateKeys();
   this->player.update();
   this->updateView();
+  this->updateInventory();
   this->updateTexts();
 }
 
@@ -220,8 +250,9 @@ void Game::update()
 
 void Game::renderTexts()
 {
-  this->window->draw(this->positionText);
-  this->window->draw(this->fpsText);
+  this->window->draw(this->debugText);
+  this->window->draw(this->inventoryText);
+  this->window->draw(this->versionText);
 }
 
 void Game::render()
