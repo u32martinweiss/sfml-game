@@ -60,7 +60,49 @@ sf::Texture loadTexture(std::string path)
 void Game::initTextures()
 {
   this->textureManager.add("player", loadTexture("assets/Textures/player.png"));
-  this->textureManager.add("grass", loadTexture("assets/Textures/grass.png"));
+  this->textureManager.add("grass", loadTexture("assets/Textures/Tiles/grass.png"));
+  this->textureManager.add("stone", loadTexture("assets/Textures/Tiles/stone.png"));
+  this->textureManager.add("mexico", loadTexture("assets/Textures/Tiles/mexico.png"));
+  this->textureManager.add("pvc", loadTexture("assets/Textures/Tiles/pvc.png"));
+  this->textureManager.add("coin-1", loadTexture("assets/Textures/Items/coin-1.png"));
+}
+
+void Game::initBackgroundRects()
+{
+  this->backgroundRects.push_back(BackgroundRect(
+    sf::Vector2f(0.f, 0.f),
+    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    &this->textureManager.get("grass")
+  ));
+  this->backgroundRects.push_back(BackgroundRect(
+    sf::Vector2f(6 * TILE_SIZE, 0.f),
+    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    &this->textureManager.get("stone")
+  ));
+  this->backgroundRects.push_back(BackgroundRect(
+    sf::Vector2f(0.f, 6 * TILE_SIZE),
+    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    &this->textureManager.get("mexico")
+  ));
+  this->backgroundRects.push_back(BackgroundRect(
+    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    &this->textureManager.get("pvc")
+  ));
+}
+
+void Game::initItems()
+{
+  for (int i = 0; i < 12; i++)
+  {
+    this->items.push_back(Item(
+      sf::Vector2f(
+        i * TILE_SIZE,
+        0.f
+      ),
+      &this->textureManager.get("coin-1")
+    ));
+  }
 }
 
 sf::Font loadFont(std::string path)
@@ -109,21 +151,16 @@ Game::Game()
 {
   this->initWindow();
   this->initTextures();
+  this->initBackgroundRects();
+  this->initItems();
   this->initFonts();
   this->initTexts();
   this->player.setTexture(&this->textureManager.get("player"));
-
-  this->mainBackgroundRect = new BackgroundRect(
-    sf::Vector2f(0.f, 0.f),
-    sf::Vector2f(TILE_SIZE * 12, TILE_SIZE * 12),
-    &this->textureManager.get("grass")
-  );
 }
 
 Game::~Game()
 {
   delete this->window;
-  delete this->mainBackgroundRect;
 }
 
 // Accessors
@@ -227,6 +264,7 @@ void Game::updateTexts()
 void Game::updateInventory()
 {
   std::stringstream inventoryStream;
+  inventoryStream << "Balance: " << this->playerMoney << " CZK\n\n";
   for (int i = 0; i < PLAYER_INVENTORY_SIZE; i++)
   {
     inventoryStream << i + 1 << ") " << this->playerInventory[i].name;
@@ -248,6 +286,22 @@ void Game::update()
 
 // Render Functions
 
+void Game::renderBackgroundRects()
+{
+  for (BackgroundRect backgroundRect : this->backgroundRects)
+  {
+    backgroundRect.render(*this->window);
+  }
+}
+
+void Game::renderItems()
+{
+  for (Item item : this->items)
+  {
+    item.render(*this->window);
+  }
+}
+
 void Game::renderTexts()
 {
   this->window->draw(this->debugText);
@@ -258,7 +312,8 @@ void Game::renderTexts()
 void Game::render()
 {
   this->window->clear();
-  this->mainBackgroundRect->render(*this->window);
+  this->renderBackgroundRects();
+  this->renderItems();
   this->player.render(*this->window);
   this->renderTexts();
   this->window->display();

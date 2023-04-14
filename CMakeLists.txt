@@ -22,11 +22,13 @@ add_executable(
   src/Classes/Player.cpp
   src/Classes/Manager.cpp
   src/Classes/BackgroundRect.cpp
+  src/Classes/Item.cpp
   src/Headers/Game.hpp
   src/Headers/Entity.hpp
   src/Headers/Player.hpp
   src/Headers/Manager.hpp
   src/Headers/BackgroundRect.hpp
+  src/Headers/Item.hpp
   src/Structs/InventoryItem.hpp
   src/Constants.hpp
 )

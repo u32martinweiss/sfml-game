@@ -5,11 +5,13 @@
 #include <iostream>
 #include <sstream>
 #include <math.h>
+#include <vector>
 #include <libconfig.h++>
 
 #include "../Constants.hpp"
 #include "Player.hpp"
 #include "BackgroundRect.hpp"
+#include "Item.hpp"
 #include "Manager.hpp"
 #include "../Structs/InventoryItem.hpp"
 
@@ -19,11 +21,15 @@ class Game
     sf::RenderWindow* window;
     sf::Event sfEvent;
     sf::View view;
-    BackgroundRect* mainBackgroundRect;
+
+    // Environment
+    std::vector<BackgroundRect> backgroundRects;
+    std::vector<Item> items;
 
     // Player
     Player player;
     InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
+    unsigned int playerMoney = 0;
 
     // Managers
     Manager<sf::Texture> textureManager;
@@ -41,6 +47,8 @@ class Game
     // Initalizers
     void initWindow();
     void initTextures();
+    void initBackgroundRects();
+    void initItems();
     void initFonts();
     void initTexts();
 
@@ -62,6 +70,8 @@ class Game
     void update();
 
     // Render Functions
+    void renderBackgroundRects();
+    void renderItems();
     void renderTexts();
     void render();
 
