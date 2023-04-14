@@ -12,6 +12,7 @@
 #include "Player.hpp"
 #include "BackgroundRect.hpp"
 #include "Item.hpp"
+#include "Collisions.hpp"
 #include "Manager.hpp"
 #include "../Structs/InventoryItem.hpp"
 
@@ -64,6 +65,7 @@ class Game
     void updateSFMLEvent();
     void updateClocks();
     void updateKeys();
+    void updateIntersections();
     void updateView();
     void updateTexts();
     void updateInventory();

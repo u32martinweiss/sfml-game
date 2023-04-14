@@ -7,7 +7,6 @@
 struct InventoryItem
 {
   std::string name = "N/A";
-  unsigned int value = 0;
 };
 
 #endif // ITEM_STRUCTS_HPP

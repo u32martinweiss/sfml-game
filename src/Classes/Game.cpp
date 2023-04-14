@@ -100,7 +100,8 @@ void Game::initItems()
         i * TILE_SIZE,
         0.f
       ),
-      &this->textureManager.get("coin-1")
+      &this->textureManager.get("coin-1"),
+      1
     ));
   }
 }
@@ -223,6 +224,20 @@ void Game::updateKeys()
   this->player.move(finalMovementVector);
 }
 
+void Game::updateIntersections()
+{
+  auto iter = std::remove_if(this->items.begin(), this->items.end(), [&](Item& item) {
+    if (Collisions::Intersection(player.getBounds(), item.getBounds()))
+    {
+      this->playerMoney += item.getValue();
+      return true;
+    }
+    return false;
+  });
+
+  this->items.erase(iter, this->items.end());
+}
+
 void Game::updateView()
 {
   // Centering the camera
@@ -279,6 +294,7 @@ void Game::update()
   this->updateClocks();
   this->updateKeys();
   this->player.update();
+  this->updateIntersections();
   this->updateView();
   this->updateInventory();
   this->updateTexts();
