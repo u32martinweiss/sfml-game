@@ -24,6 +24,7 @@ add_executable(
   src/Classes/BackgroundRect.cpp
   src/Classes/Item.cpp
   src/Classes/Collisions.cpp
+  src/Classes/Block.cpp
   src/Headers/Game.hpp
   src/Headers/Entity.hpp
   src/Headers/Player.hpp
@@ -31,6 +32,7 @@ add_executable(
   src/Headers/BackgroundRect.hpp
   src/Headers/Item.hpp
   src/Headers/Collisions.hpp
+  src/Headers/Block.hpp
   src/Structs/InventoryItem.hpp
   src/Constants.hpp
 )

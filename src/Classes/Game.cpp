@@ -65,6 +65,7 @@ void Game::initTextures()
   this->textureManager.add("mexico", loadTexture("assets/Textures/Tiles/mexico.png"));
   this->textureManager.add("pvc", loadTexture("assets/Textures/Tiles/pvc.png"));
   this->textureManager.add("coin-1", loadTexture("assets/Textures/Items/coin-1.png"));
+  this->textureManager.add("box", loadTexture("assets/Textures/Tiles/box.png"));
 }
 
 void Game::initBackgroundRects()
@@ -91,6 +92,20 @@ void Game::initBackgroundRects()
   ));
 }
 
+void Game::initBlocks()
+{
+  for (int i = 0; i < 12; i++)
+  {
+    this->blocks.push_back(Block(
+      sf::Vector2f(
+        i * TILE_SIZE,
+        0.f
+      ),
+      &this->textureManager.get("box")
+    ));
+  }
+}
+
 void Game::initItems()
 {
   for (int i = 0; i < 12; i++)
@@ -98,7 +113,7 @@ void Game::initItems()
     this->items.push_back(Item(
       sf::Vector2f(
         i * TILE_SIZE,
-        0.f
+        TILE_SIZE
       ),
       &this->textureManager.get("coin-1"),
       1
@@ -153,6 +168,7 @@ Game::Game()
   this->initWindow();
   this->initTextures();
   this->initBackgroundRects();
+  this->initBlocks();
   this->initItems();
   this->initFonts();
   this->initTexts();
@@ -310,6 +326,14 @@ void Game::renderBackgroundRects()
   }
 }
 
+void Game::renderBlocks()
+{
+  for (Block block : this->blocks)
+  {
+    block.render(*this->window);
+  }
+}
+
 void Game::renderItems()
 {
   for (Item item : this->items)
@@ -329,6 +353,7 @@ void Game::render()
 {
   this->window->clear();
   this->renderBackgroundRects();
+  this->renderBlocks();
   this->renderItems();
   this->player.render(*this->window);
   this->renderTexts();

@@ -26,7 +26,7 @@ class Entity
     // Functions
     void move(sf::Vector2f movement);
     virtual void update() = 0;
-    virtual void render(sf::RenderTarget &target) = 0;
+    virtual void render(sf::RenderTarget& target) = 0;
 };
 
 #endif // ENTITY_HPP

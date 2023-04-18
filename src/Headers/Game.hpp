@@ -11,6 +11,7 @@
 #include "../Constants.hpp"
 #include "Player.hpp"
 #include "BackgroundRect.hpp"
+#include "Block.hpp"
 #include "Item.hpp"
 #include "Collisions.hpp"
 #include "Manager.hpp"
@@ -25,6 +26,7 @@ class Game
 
     // Environment
     std::vector<BackgroundRect> backgroundRects;
+    std::vector<Block> blocks;
     std::vector<Item> items;
 
     // Player
@@ -49,6 +51,7 @@ class Game
     void initWindow();
     void initTextures();
     void initBackgroundRects();
+    void initBlocks();
     void initItems();
     void initFonts();
     void initTexts();
@@ -73,6 +76,7 @@ class Game
 
     // Render Functions
     void renderBackgroundRects();
+    void renderBlocks();
     void renderItems();
     void renderTexts();
     void render();
