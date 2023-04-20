@@ -19,3 +19,4 @@ T& Manager<T>::get(std::string name)
 }
 
 template class Manager<sf::Texture>;
+template class Manager<sf::Font>;

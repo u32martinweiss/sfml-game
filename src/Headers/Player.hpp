@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../Constants.hpp"
 #include "Entity.hpp"
 
 class Player : public Entity
