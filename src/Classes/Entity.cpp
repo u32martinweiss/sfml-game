@@ -29,9 +29,19 @@ const sf::Vector2f Entity::getPosition() const
   return this->shape.getPosition();
 }
 
+const sf::Vector2f Entity::getMovement() const
+{
+  return this->movement;
+}
+
 // Functions
 
 void Entity::move(sf::Vector2f movement)
 {
   this->movement = movement;
+}
+
+void Entity::moveTo(sf::Vector2f position)
+{
+  this->shape.setPosition(position);
 }

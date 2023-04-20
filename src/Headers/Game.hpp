@@ -69,6 +69,7 @@ class Game
     void updateClocks();
     void updateKeys();
     void updateIntersections();
+    void updateCollisions();
     void updateView();
     void updateTexts();
     void updateInventory();

@@ -104,11 +104,44 @@ void Game::initBlocks()
       &this->textureManager.get("box")
     ));
   }
+
+  for (int i = 0; i < 12; i++)
+  {
+    this->blocks.push_back(Block(
+      sf::Vector2f(
+        i * TILE_SIZE,
+        11 * TILE_SIZE
+      ),
+      &this->textureManager.get("box")
+    ));
+  }
+
+  for (int i = 1; i < 11; i++)
+  {
+    this->blocks.push_back(Block(
+      sf::Vector2f(
+        0.f,
+        i * TILE_SIZE
+      ),
+      &this->textureManager.get("box")
+    ));
+  }
+
+  for (int i = 1; i < 11; i++)
+  {
+    this->blocks.push_back(Block(
+      sf::Vector2f(
+        11 * TILE_SIZE,
+        i * TILE_SIZE
+      ),
+      &this->textureManager.get("box")
+    ));
+  }
 }
 
 void Game::initItems()
 {
-  for (int i = 0; i < 12; i++)
+  for (int i = 1; i < 11; i++)
   {
     this->items.push_back(Item(
       sf::Vector2f(
@@ -254,6 +287,62 @@ void Game::updateIntersections()
   this->items.erase(iter, this->items.end());
 }
 
+void Game::updateCollisions()
+{
+  // Phyics information
+  sf::FloatRect playerRect = this->player.getBounds();
+  sf::Vector2f playerPosition = this->player.getPosition();
+  sf::Vector2f playerMovement = this->player.getMovement();
+  float movementSpeed = PLAYER_SPEED * this->dt;
+
+  // Getting the player's future position
+  sf::FloatRect futurePlayerRect = sf::FloatRect(
+    playerPosition.x + playerMovement.x * this->dt,
+    playerPosition.y + playerMovement.y * this->dt,
+    playerRect.width,
+    playerRect.height
+  );
+
+  for (const auto& block : this->blocks)
+  {
+    // Checking the current block intersects
+    sf::FloatRect blockRect = block.getBounds();
+    if (!futurePlayerRect.intersects(blockRect)) continue;
+    sf::Vector2f overlap(
+      std::min(futurePlayerRect.left + futurePlayerRect.width, blockRect.left + blockRect.width) - std::max(futurePlayerRect.left, blockRect.left),
+      std::min(futurePlayerRect.top + futurePlayerRect.height, blockRect.top + blockRect.height) - std::max(futurePlayerRect.top, blockRect.top)
+    );
+
+    // Vertical Collision
+    if (overlap.x > overlap.y) {
+      if (playerPosition.y < blockRect.top) {
+        // Below the Block
+        player.moveTo(sf::Vector2f(playerRect.left, blockRect.top - blockRect.height));
+        playerMovement.y = 0;
+      } else {
+        // Above the Block
+        player.moveTo(sf::Vector2f(playerRect.left, blockRect.top + blockRect.height));
+        playerMovement.y = 0;
+      }
+      continue;
+    }
+
+    // Horizontal Collision
+    if (playerPosition.x < blockRect.left) {
+      // Left to the Block
+      player.moveTo(sf::Vector2f(blockRect.left - blockRect.width, playerRect.top));
+      playerMovement.x = 0;
+    } else {
+      // Right to the Block
+      player.moveTo(sf::Vector2f(blockRect.left + blockRect.width, playerRect.top));
+      playerMovement.x = 0;
+    }
+  }
+
+  // Updating the player's movement vector
+  player.move(playerMovement);
+}
+
 void Game::updateView()
 {
   // Centering the camera
@@ -309,6 +398,7 @@ void Game::update()
   this->updateSFMLEvent();
   this->updateClocks();
   this->updateKeys();
+  this->updateCollisions();
   this->player.update();
   this->updateIntersections();
   this->updateView();

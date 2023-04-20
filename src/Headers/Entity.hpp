@@ -22,9 +22,11 @@ class Entity
     // Accessors
     const sf::FloatRect getBounds() const;
     const sf::Vector2f getPosition() const;
+    const sf::Vector2f getMovement() const;
 
     // Functions
     void move(sf::Vector2f movement);
+    void moveTo(sf::Vector2f position);
     virtual void update() = 0;
     virtual void render(sf::RenderTarget& target) = 0;
 };

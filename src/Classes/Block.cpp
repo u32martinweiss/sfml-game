@@ -19,6 +19,13 @@ Block::Block(sf::Vector2f position, sf::Texture* texture)
   this->shape.setTexture(texture);
 }
 
+// Accessors
+
+const sf::FloatRect Block::getBounds() const
+{
+  return this->shape.getGlobalBounds();
+}
+
 // Functions
 
 void Block::render(sf::RenderTarget& target)
