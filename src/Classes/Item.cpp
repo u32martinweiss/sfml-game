@@ -13,11 +13,12 @@ void Item::initShape(sf::Vector2f position)
 
 // Constructor
 
-Item::Item(sf::Vector2f position, sf::Texture* texture, unsigned int value)
+Item::Item(sf::Vector2f position, sf::Texture* texture, unsigned int moneyValue, unsigned int ammoValue)
 {
   this->initShape(position);
   this->shape.setTexture(texture);
-  this->value = value;
+  this->moneyValue = moneyValue;
+  this->ammoValue = ammoValue;
 }
 
 // Accessors
@@ -27,9 +28,14 @@ const sf::FloatRect Item::getBounds() const
   return this->shape.getGlobalBounds();
 }
 
-const unsigned int Item::getValue() const
+const unsigned int Item::getMoneyValue() const
 {
-  return this->value;
+  return this->moneyValue;
+}
+
+const unsigned int Item::getAmmoValue() const
+{
+  return this->ammoValue;
 }
 
 // Functions

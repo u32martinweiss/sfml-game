@@ -75,6 +75,7 @@ void Game::initTextures()
   // Items
   this->textureManager.add("coin-1", loadTexture("assets/Textures/Items/coin-1.png"));
   this->textureManager.add("xiao", loadTexture("assets/Textures/Items/xiao.png"));
+  this->textureManager.add("ammo-box", loadTexture("assets/Textures/Items/ammo-box.png"));
 
   // Interface
   this->textureManager.add("heart-full", loadTexture("assets/Textures/Interface/heart-full.png"));
@@ -164,7 +165,21 @@ void Game::initItems()
         TILE_SIZE
       ),
       &this->textureManager.get("coin-1"),
-      1
+      1,
+      0
+    ));
+  }
+
+  for (int i = 1; i < 15; i++)
+  {
+    this->items.push_back(Item(
+      sf::Vector2f(
+        i * TILE_SIZE,
+        14 * TILE_SIZE
+      ),
+      &this->textureManager.get("ammo-box"),
+      1,
+      20
     ));
   }
 }
@@ -327,7 +342,7 @@ void Game::updateKeys()
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) this->activeInventorySlot = 8;
 
   // Spwaning Bullets
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && this->bulletTime > BULLET_RELOAD)
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && this->bulletTime > BULLET_RELOAD_TIME && this->playerBullets > 0)
   {
     this->bullets.push_back(
       Bullet(
@@ -339,9 +354,22 @@ void Game::updateKeys()
       )
     );
     this->bulletClock.restart();
+    this->playerBullets--;
   }
 
   this->player.move(finalMovementVector);
+}
+
+void Game::updateBullets()
+{
+  for (int i = 0; i < this->bullets.size(); i++)
+  {
+    this->bullets[i].update();
+    if (this->bullets[i].getDespawnTime() > 2)
+    {
+      this->bullets.erase(this->bullets.begin() + i);
+    }
+  }
 }
 
 void Game::updateIntersections()
@@ -349,7 +377,8 @@ void Game::updateIntersections()
   auto iter = std::remove_if(this->items.begin(), this->items.end(), [&](Item& item) {
     if (Collisions::Intersection(player.getBounds(), item.getBounds()))
     {
-      this->playerMoney += item.getValue();
+      this->playerMoney += item.getMoneyValue();
+      this->playerBullets += item.getAmmoValue();
       return true;
     }
     return false;
@@ -463,6 +492,7 @@ void Game::update()
   this->updateSFMLEvent();
   this->updateClocks();
   this->updateKeys();
+  this->updateBullets();
   this->updateCollisions();
   this->player.update();
   this->updateIntersections();

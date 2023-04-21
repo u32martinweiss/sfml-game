@@ -20,6 +20,13 @@ Bullet::Bullet(sf::Vector2f position, sf::Texture* texture)
   this->shape.setTexture(texture);
 }
 
+// Accessors
+
+const float Bullet::getDespawnTime() const
+{
+  return this->despawnClock.getElapsedTime().asSeconds();
+}
+
 // Functions
 
 void Bullet::update()

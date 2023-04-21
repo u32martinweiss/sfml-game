@@ -83,6 +83,7 @@ class Game
     void updateSFMLEvent();
     void updateClocks();
     void updateKeys();
+    void updateBullets();
     void updateIntersections();
     void updateCollisions();
     void updateView();
