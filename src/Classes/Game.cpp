@@ -77,35 +77,36 @@ void Game::initTextures()
   this->textureManager.add("heart-full", loadTexture("assets/Textures/Interface/heart-full.png"));
   this->textureManager.add("inventory-box", loadTexture("assets/Textures/Interface/inventory-box.png"));
   this->textureManager.add("inventory-box-active", loadTexture("assets/Textures/Interface/inventory-box-active.png"));
+  this->textureManager.add("bullets", loadTexture("assets/Textures/Interface/bullets.png"));
 }
 
 void Game::initBackgroundRects()
 {
   this->backgroundRects.push_back(BackgroundRect(
     sf::Vector2f(0.f, 0.f),
-    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    sf::Vector2f(8 * TILE_SIZE, 8 * TILE_SIZE),
     &this->textureManager.get("grass")
   ));
   this->backgroundRects.push_back(BackgroundRect(
-    sf::Vector2f(6 * TILE_SIZE, 0.f),
-    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    sf::Vector2f(8 * TILE_SIZE, 0.f),
+    sf::Vector2f(8 * TILE_SIZE, 8 * TILE_SIZE),
     &this->textureManager.get("stone")
   ));
   this->backgroundRects.push_back(BackgroundRect(
-    sf::Vector2f(0.f, 6 * TILE_SIZE),
-    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    sf::Vector2f(0.f, 8 * TILE_SIZE),
+    sf::Vector2f(8 * TILE_SIZE, 8 * TILE_SIZE),
     &this->textureManager.get("mexico")
   ));
   this->backgroundRects.push_back(BackgroundRect(
-    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
-    sf::Vector2f(6 * TILE_SIZE, 6 * TILE_SIZE),
+    sf::Vector2f(8 * TILE_SIZE, 8 * TILE_SIZE),
+    sf::Vector2f(8 * TILE_SIZE, 8 * TILE_SIZE),
     &this->textureManager.get("pvc")
   ));
 }
 
 void Game::initBlocks()
 {
-  for (int i = 0; i < 12; i++)
+  for (int i = 0; i < 16; i++)
   {
     this->blocks.push_back(Block(
       sf::Vector2f(
@@ -116,18 +117,18 @@ void Game::initBlocks()
     ));
   }
 
-  for (int i = 0; i < 12; i++)
+  for (int i = 0; i < 16; i++)
   {
     this->blocks.push_back(Block(
       sf::Vector2f(
         i * TILE_SIZE,
-        11 * TILE_SIZE
+        15 * TILE_SIZE
       ),
       &this->textureManager.get("box")
     ));
   }
 
-  for (int i = 1; i < 11; i++)
+  for (int i = 1; i < 15; i++)
   {
     this->blocks.push_back(Block(
       sf::Vector2f(
@@ -138,11 +139,11 @@ void Game::initBlocks()
     ));
   }
 
-  for (int i = 1; i < 11; i++)
+  for (int i = 1; i < 15; i++)
   {
     this->blocks.push_back(Block(
       sf::Vector2f(
-        11 * TILE_SIZE,
+        15 * TILE_SIZE,
         i * TILE_SIZE
       ),
       &this->textureManager.get("box")
@@ -152,7 +153,7 @@ void Game::initBlocks()
 
 void Game::initItems()
 {
-  for (int i = 1; i < 11; i++)
+  for (int i = 1; i < 15; i++)
   {
     this->items.push_back(Item(
       sf::Vector2f(
@@ -204,8 +205,24 @@ void Game::initTexts()
   this->itemCountText.setCharacterSize(ITEM_FONT_SIZE);
   this->itemCountText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS);
 
+  // Bullet Count Text
+  this->bulletCountText.setFont(this->fontManager.get("terminus"));
+  this->bulletCountText.setFillColor(sf::Color::White);
+  this->bulletCountText.setCharacterSize(ITEM_FONT_SIZE);
+  this->bulletCountText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS);
+
   this->playerInventory[PLAYER_INVENTORY_SIZE - 1].name = "xiao";
   this->playerInventory[PLAYER_INVENTORY_SIZE - 1].count = 7;
+}
+
+void Game::initInterface()
+{
+  this->heartShape.setTexture(&this->textureManager.get("heart-full"));
+  this->heartShape.setSize(sf::Vector2f(HEART_SIZE, HEART_SIZE));
+  this->inventoryBoxShape.setSize(sf::Vector2f(INVENTORY_BOX_SIZE, INVENTORY_BOX_SIZE));
+  this->inventoryItemShape.setSize(sf::Vector2f(ITEM_SIZE, ITEM_SIZE));
+  this->bulletsShape.setTexture(&this->textureManager.get("bullets"));
+  this->bulletsShape.setSize(sf::Vector2f(22.f, 22.f));
 }
 
 // Constructor and Destructor
@@ -219,11 +236,8 @@ Game::Game()
   this->initItems();
   this->initFonts();
   this->initTexts();
+  this->initInterface();
   this->player.setTexture(&this->textureManager.get("player"));
-  this->heartShape.setTexture(&this->textureManager.get("heart-full"));
-  this->heartShape.setSize(sf::Vector2f(HEART_SIZE, HEART_SIZE));
-  this->inventoryBoxShape.setSize(sf::Vector2f(INVENTORY_BOX_SIZE, INVENTORY_BOX_SIZE));
-  this->inventoryItemShape.setSize(sf::Vector2f(ITEM_SIZE, ITEM_SIZE));
 }
 
 Game::~Game()
@@ -411,6 +425,13 @@ void Game::updateTexts()
     this->view.getCenter().x + this->view.getSize().x / 2 - this->versionText.getGlobalBounds().width - TEXT_OFFSET,
     this->view.getCenter().y - this->view.getSize().y / 2 + TEXT_OFFSET
   ));
+
+  // Bullet Count Text
+  this->bulletCountText.setPosition(sf::Vector2f(
+    this->view.getCenter().x + this->view.getSize().x / 2 - this->bulletCountText.getGlobalBounds().width - this->bulletsShape.getGlobalBounds().width - TEXT_OFFSET - 8.f,
+    this->view.getCenter().y + this->view.getSize().y / 2 - this->bulletCountText.getGlobalBounds().height - this->bulletsShape.getGlobalBounds().height
+  ));
+  this->bulletCountText.setString(std::to_string(this->playerBullets));
 }
 
 void Game::updateInventory()
@@ -457,13 +478,13 @@ void Game::renderItems()
   }
 }
 
-void Game::renderUI()
+void Game::renderInterface()
 {
   for (int i = 0; i < this->playerHealth; i++)
   {
     this->heartShape.setPosition(sf::Vector2f(
-      this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET + i * (HEART_SIZE + HEART_SIZE / 3.f),
-      this->view.getCenter().y + this->view.getSize().y / 2 - this->heartShape.getGlobalBounds().width - TEXT_OFFSET - INVENTORY_BOX_SIZE - 6.f
+      this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET + i * (HEART_SIZE + HEART_SIZE / 6.f),
+      this->view.getCenter().y + this->view.getSize().y / 2 - this->heartShape.getGlobalBounds().width - TEXT_OFFSET - INVENTORY_BOX_SIZE - HEART_SIZE / 3.f
     ));
     this->window->draw(this->heartShape);
   }
@@ -473,7 +494,7 @@ void Game::renderUI()
     // Setting the inventory box texture
     this->inventoryBoxShape.setTexture(&this->textureManager.get(i == this->activeInventorySlot ? "inventory-box-active" : "inventory-box"));
   
-    // Rendering the inventoryy boxes
+    // Rendering the inventory boxes
     this->inventoryBoxShape.setPosition(sf::Vector2f(
       this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET + i * (INVENTORY_BOX_SIZE - 1.f),
       this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryBoxShape.getGlobalBounds().width - TEXT_OFFSET
@@ -501,12 +522,19 @@ void Game::renderUI()
     this->window->draw(this->inventoryItemShape);
     this->window->draw(this->itemCountText);
   }
+
+  this->bulletsShape.setPosition(sf::Vector2f(
+    this->view.getCenter().x + this->view.getSize().x / 2 - this->bulletsShape.getGlobalBounds().width - TEXT_OFFSET,
+    this->view.getCenter().y + this->view.getSize().y / 2 - this->bulletsShape.getGlobalBounds().height - TEXT_OFFSET
+  ));
+  this->window->draw(this->bulletsShape);
 }
 
 void Game::renderTexts()
 {
   this->window->draw(this->debugText);
   this->window->draw(this->versionText);
+  this->window->draw(this->bulletCountText);
 }
 
 void Game::render()
@@ -516,7 +544,7 @@ void Game::render()
   this->renderBlocks();
   this->renderItems();
   this->player.render(*this->window);
-  this->renderUI();
+  this->renderInterface();
   this->renderTexts();
   this->window->display();
 }

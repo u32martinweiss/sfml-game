@@ -33,14 +33,16 @@ class Game
     Player player;
     unsigned int playerMoney = 0;
     unsigned int playerHealth = 10;
+    unsigned int playerBullets = 20;
 
-    // Inventory
+    // Interface
     InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
     int activeInventorySlot = 0;
     sf::RectangleShape heartShape;
     sf::RectangleShape inventoryBoxShape;
     sf::Text itemCountText;
     sf::RectangleShape inventoryItemShape;
+    sf::RectangleShape bulletsShape;
 
     // Managers
     Manager<sf::Texture> textureManager;
@@ -49,6 +51,7 @@ class Game
     // Texts
     sf::Text debugText;
     sf::Text versionText;
+    sf::Text bulletCountText;
 
     // Clocks
     sf::Clock dtClock;
@@ -62,6 +65,7 @@ class Game
     void initItems();
     void initFonts();
     void initTexts();
+    void initInterface();
 
   public:
     // Constructor and Destructor
@@ -86,7 +90,7 @@ class Game
     void renderBackgroundRects();
     void renderBlocks();
     void renderItems();
-    void renderUI();
+    void renderInterface();
     void renderTexts();
     void render();
 
