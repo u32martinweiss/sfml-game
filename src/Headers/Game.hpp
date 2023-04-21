@@ -34,9 +34,11 @@ class Game
     InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
     unsigned int playerMoney = 0;
     unsigned int playerHealth = 3;
+    unsigned int activeInventorySlot = 0;
 
     // Testing
     sf::RectangleShape heartShape;
+    sf::RectangleShape inventoryBoxShape;
 
     // Managers
     Manager<sf::Texture> textureManager;
@@ -44,7 +46,6 @@ class Game
 
     // Texts
     sf::Text debugText;
-    sf::Text inventoryText;
     sf::Text versionText;
 
     // Clocks

@@ -67,6 +67,8 @@ void Game::initTextures()
   this->textureManager.add("coin-1", loadTexture("assets/Textures/Items/coin-1.png"));
   this->textureManager.add("box", loadTexture("assets/Textures/Tiles/box.png"));
   this->textureManager.add("heart-full", loadTexture("assets/Textures/Interface/heart-full.png"));
+  this->textureManager.add("inventory-box", loadTexture("assets/Textures/Interface/inventory-box.png"));
+  this->textureManager.add("inventory-box-active", loadTexture("assets/Textures/Interface/inventory-box-active.png"));
 }
 
 void Game::initBackgroundRects()
@@ -178,12 +180,6 @@ void Game::initTexts()
   this->debugText.setCharacterSize(BASE_FONT_SIZE);
   this->debugText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS); 	
 
-  // Inventory Text
-  this->inventoryText.setFont(this->fontManager.get("terminus"));
-  this->inventoryText.setFillColor(sf::Color::White);
-  this->inventoryText.setCharacterSize(BASE_FONT_SIZE);
-  this->inventoryText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS); 	
-
   // Version Text
   this->versionText.setFont(this->fontManager.get("terminus"));
   this->versionText.setFillColor(sf::Color::White);
@@ -209,10 +205,7 @@ Game::Game()
   this->player.setTexture(&this->textureManager.get("player"));
   this->heartShape.setTexture(&this->textureManager.get("heart-full"));
   this->heartShape.setSize(sf::Vector2f(24.f, 24.f));
-  this->heartShape.setPosition(sf::Vector2f(
-    0.f,
-    0.f
-  ));
+  this->inventoryBoxShape.setSize(sf::Vector2f(32.f, 32.f));
 }
 
 Game::~Game()
@@ -375,12 +368,6 @@ void Game::updateTexts()
     this->view.getCenter().y - this->view.getSize().y / 2 + 8.f
   ));
 
-  // Inventory Text
-  this->inventoryText.setPosition(sf::Vector2f(
-    this->view.getCenter().x - this->view.getSize().x / 2 + 8.f,
-    this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryText.getGlobalBounds().height - 8.f
-  ));
-
   // Version Text
   this->versionText.setPosition(sf::Vector2f(
     this->view.getCenter().x + this->view.getSize().x / 2 - this->versionText.getGlobalBounds().width - 8.f,
@@ -390,14 +377,7 @@ void Game::updateTexts()
 
 void Game::updateInventory()
 {
-  std::stringstream inventoryStream;
-  inventoryStream << "Balance: " << this->playerMoney << " CZK\n\n";
-  for (int i = 0; i < PLAYER_INVENTORY_SIZE; i++)
-  {
-    inventoryStream << i + 1 << ") " << this->playerInventory[i].name;
-    if (i != PLAYER_INVENTORY_SIZE - 1) inventoryStream << '\n';
-  }
-  this->inventoryText.setString(inventoryStream.str());
+
 }
 
 void Game::update()
@@ -449,12 +429,23 @@ void Game::renderUI()
     ));
     this->window->draw(this->heartShape);
   }
+
+  for (int i = 0; i < PLAYER_INVENTORY_SIZE; i++)
+  {
+    // Setting the inventory box texture
+    this->inventoryBoxShape.setTexture(&this->textureManager.get(i == this->activeInventorySlot ? "inventory-box-active" : "inventory-box"));
+  
+    this->inventoryBoxShape.setPosition(sf::Vector2f(
+       this->view.getCenter().x - this->view.getSize().x / 2 + 16. + i * 31.f,
+      this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryBoxShape.getGlobalBounds().width - 16.f
+    ));
+    this->window->draw(this->inventoryBoxShape);
+  }
 }
 
 void Game::renderTexts()
 {
   this->window->draw(this->debugText);
-  this->window->draw(this->inventoryText);
   this->window->draw(this->versionText);
 }
 
