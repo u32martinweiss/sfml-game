@@ -20,4 +20,9 @@ const float TEXT_OFFSET                 = 12.f;
 const float        PLAYER_SPEED          = 128.f;
 const unsigned int PLAYER_INVENTORY_SIZE = 9;
 
+// Bullets
+const float BULLET_SIZE   = 8.f;
+const float BULLET_SPEED  = 512.f;
+const float BULLET_RELOAD = 0.05f;
+
 #endif // CONSTANTS_HPP

@@ -1,25 +1,24 @@
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#ifndef BULLET_HPP
+#define BULLET_HPP
 
 #include <SFML/Graphics.hpp>
-#include <math.h>
 
 #include "../Constants.hpp"
 #include "Entity.hpp"
 
-class Player : public Entity
+class Bullet : public Entity
 {
   private:
     // Initializers
-    void initShape();
+    void initShape(sf::Vector2f position);
 
   public:
     // Constructor
-    Player();
+    Bullet(sf::Vector2f position, sf::Texture* texture);
 
     // Functions
     void update();
     void render(sf::RenderTarget& target);
 };
 
-#endif // PLAYER_HPP
+#endif // BULLET_HPP

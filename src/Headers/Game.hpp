@@ -13,6 +13,7 @@
 #include "BackgroundRect.hpp"
 #include "Block.hpp"
 #include "Item.hpp"
+#include "Bullet.hpp"
 #include "Collisions.hpp"
 #include "Manager.hpp"
 #include "../Structs/InventoryItem.hpp"
@@ -28,6 +29,7 @@ class Game
     std::vector<BackgroundRect> backgroundRects;
     std::vector<Block> blocks;
     std::vector<Item> items;
+    std::vector<Bullet> bullets;
 
     // Player
     Player player;
@@ -56,6 +58,8 @@ class Game
     // Clocks
     sf::Clock dtClock;
     float dt;
+    sf::Clock bulletClock;
+    float bulletTime;
 
     // Initalizers
     void initWindow();
@@ -90,6 +94,7 @@ class Game
     void renderBackgroundRects();
     void renderBlocks();
     void renderItems();
+    void renderBullets();
     void renderInterface();
     void renderTexts();
     void render();

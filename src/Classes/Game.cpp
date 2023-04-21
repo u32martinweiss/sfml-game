@@ -62,6 +62,9 @@ void Game::initTextures()
   // Player
   this->textureManager.add("player", loadTexture("assets/Textures/player.png"));
 
+  // Buller
+  this->textureManager.add("bullet", loadTexture("assets/Textures/bullet.png"));
+
   // Tiles
   this->textureManager.add("grass", loadTexture("assets/Textures/Tiles/grass.png"));
   this->textureManager.add("stone", loadTexture("assets/Textures/Tiles/stone.png"));
@@ -286,6 +289,7 @@ void Game::updateSFMLEvent()
 void Game::updateClocks()
 {
   this->dt = this->dtClock.restart().asSeconds();
+  this->bulletTime = this->bulletClock.getElapsedTime().asSeconds();
 }
 
 void Game::updateKeys()
@@ -321,6 +325,21 @@ void Game::updateKeys()
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) this->activeInventorySlot = 6;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) this->activeInventorySlot = 7;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) this->activeInventorySlot = 8;
+
+  // Spwaning Bullets
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && this->bulletTime > BULLET_RELOAD)
+  {
+    this->bullets.push_back(
+      Bullet(
+        sf::Vector2f(
+          this->player.getBounds().left + TILE_SIZE / 2 - BULLET_SIZE / 2,
+          this->player.getBounds().top + TILE_SIZE / 2 - BULLET_SIZE / 2
+        ),
+        &this->textureManager.get("bullet")
+      )
+    );
+    this->bulletClock.restart();
+  }
 
   this->player.move(finalMovementVector);
 }
@@ -478,6 +497,14 @@ void Game::renderItems()
   }
 }
 
+void Game::renderBullets()
+{
+  for (Bullet bullet : this->bullets)
+  {
+    bullet.render(*this->window);
+  }
+}
+
 void Game::renderInterface()
 {
   for (int i = 0; i < this->playerHealth; i++)
@@ -543,6 +570,7 @@ void Game::render()
   this->renderBackgroundRects();
   this->renderBlocks();
   this->renderItems();
+  this->renderBullets();
   this->player.render(*this->window);
   this->renderInterface();
   this->renderTexts();
