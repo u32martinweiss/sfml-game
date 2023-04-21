@@ -3,7 +3,7 @@
 
 // Game Info
 const std::string GAME_TITLE   = "Better Call SOS";
-const std::string GAME_VERSION = "InDev 0.3";
+const std::string GAME_VERSION = "InDev 0.4";
 
 Game game;
 
