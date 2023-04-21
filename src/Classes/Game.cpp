@@ -204,8 +204,8 @@ Game::Game()
   this->initTexts();
   this->player.setTexture(&this->textureManager.get("player"));
   this->heartShape.setTexture(&this->textureManager.get("heart-full"));
-  this->heartShape.setSize(sf::Vector2f(24.f, 24.f));
-  this->inventoryBoxShape.setSize(sf::Vector2f(32.f, 32.f));
+  this->heartShape.setSize(sf::Vector2f(HEART_SIZE, HEART_SIZE));
+  this->inventoryBoxShape.setSize(sf::Vector2f(INVENTORY_BOX_SIZE, INVENTORY_BOX_SIZE));
 }
 
 Game::~Game()
@@ -234,6 +234,15 @@ void Game::updateSFMLEvent()
 
       case sf::Event::Resized:
         this->view.setSize(sf::Vector2f(sfEvent.size.width, sfEvent.size.height));
+        break;
+
+      case sf::Event::MouseWheelMoved:
+        this->activeInventorySlot = this->activeInventorySlot + this->sfEvent.mouseWheel.delta;
+        if (activeInventorySlot < 0) {
+          this->activeInventorySlot = PLAYER_INVENTORY_SIZE - 1;
+        } else if (activeInventorySlot >= PLAYER_INVENTORY_SIZE) {
+          this->activeInventorySlot = 0;
+        }
         break;
 
       default:
@@ -269,6 +278,17 @@ void Game::updateKeys()
   {
     finalMovementVector.x = 1;
   }
+
+  // Inventory Keybindings
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num1)) this->activeInventorySlot = 0;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num2)) this->activeInventorySlot = 1;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num3)) this->activeInventorySlot = 2;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num4)) this->activeInventorySlot = 3;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num5)) this->activeInventorySlot = 4;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num6)) this->activeInventorySlot = 5;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) this->activeInventorySlot = 6;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) this->activeInventorySlot = 7;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) this->activeInventorySlot = 8;
 
   this->player.move(finalMovementVector);
 }
@@ -364,14 +384,14 @@ void Game::updateTexts()
     "Position\n\nX: " + std::to_string(roundedPosition.x) + "\nY: " + std::to_string(roundedPosition.y) + "\n\nFPS: " + std::to_string(fps)
   );
   this->debugText.setPosition(sf::Vector2f(
-    this->view.getCenter().x - this->view.getSize().x / 2 + 8.f,
-    this->view.getCenter().y - this->view.getSize().y / 2 + 8.f
+    this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET,
+    this->view.getCenter().y - this->view.getSize().y / 2 + TEXT_OFFSET
   ));
 
   // Version Text
   this->versionText.setPosition(sf::Vector2f(
-    this->view.getCenter().x + this->view.getSize().x / 2 - this->versionText.getGlobalBounds().width - 8.f,
-    this->view.getCenter().y - this->view.getSize().y / 2 + 8.f
+    this->view.getCenter().x + this->view.getSize().x / 2 - this->versionText.getGlobalBounds().width - TEXT_OFFSET,
+    this->view.getCenter().y - this->view.getSize().y / 2 + TEXT_OFFSET
   ));
 }
 
@@ -424,8 +444,8 @@ void Game::renderUI()
   for (int i = 0; i < this->playerHealth; i++)
   {
     this->heartShape.setPosition(sf::Vector2f(
-      this->view.getCenter().x + this->view.getSize().x / 2 - this->heartShape.getGlobalBounds().width - 16.f - i * 32.f,
-      this->view.getCenter().y + this->view.getSize().y / 2 - this->heartShape.getGlobalBounds().width - 16.f
+      this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET + i * (HEART_SIZE + HEART_SIZE / 3.f),
+      this->view.getCenter().y + this->view.getSize().y / 2 - this->heartShape.getGlobalBounds().width - TEXT_OFFSET - INVENTORY_BOX_SIZE - 6.f
     ));
     this->window->draw(this->heartShape);
   }
@@ -436,8 +456,8 @@ void Game::renderUI()
     this->inventoryBoxShape.setTexture(&this->textureManager.get(i == this->activeInventorySlot ? "inventory-box-active" : "inventory-box"));
   
     this->inventoryBoxShape.setPosition(sf::Vector2f(
-       this->view.getCenter().x - this->view.getSize().x / 2 + 16. + i * 31.f,
-      this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryBoxShape.getGlobalBounds().width - 16.f
+      this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET + i * (INVENTORY_BOX_SIZE - 1.f),
+      this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryBoxShape.getGlobalBounds().width - TEXT_OFFSET
     ));
     this->window->draw(this->inventoryBoxShape);
   }

@@ -33,8 +33,8 @@ class Game
     Player player;
     InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
     unsigned int playerMoney = 0;
-    unsigned int playerHealth = 3;
-    unsigned int activeInventorySlot = 0;
+    unsigned int playerHealth = 10;
+    int activeInventorySlot = 0;
 
     // Testing
     sf::RectangleShape heartShape;
