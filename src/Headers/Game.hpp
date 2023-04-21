@@ -31,14 +31,16 @@ class Game
 
     // Player
     Player player;
-    InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
     unsigned int playerMoney = 0;
     unsigned int playerHealth = 10;
-    int activeInventorySlot = 0;
 
-    // Testing
+    // Inventory
+    InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
+    int activeInventorySlot = 0;
     sf::RectangleShape heartShape;
     sf::RectangleShape inventoryBoxShape;
+    sf::Text itemCountText;
+    sf::RectangleShape inventoryItemShape;
 
     // Managers
     Manager<sf::Texture> textureManager;

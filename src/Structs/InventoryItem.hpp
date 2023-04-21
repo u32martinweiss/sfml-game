@@ -6,7 +6,8 @@
 
 struct InventoryItem
 {
-  std::string name = "N/A";
+  std::string name = "";
+  unsigned int count = 0;
 };
 
 #endif // ITEM_STRUCTS_HPP

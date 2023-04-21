@@ -59,13 +59,21 @@ sf::Texture loadTexture(std::string path)
 
 void Game::initTextures()
 {
+  // Player
   this->textureManager.add("player", loadTexture("assets/Textures/player.png"));
+
+  // Tiles
   this->textureManager.add("grass", loadTexture("assets/Textures/Tiles/grass.png"));
   this->textureManager.add("stone", loadTexture("assets/Textures/Tiles/stone.png"));
   this->textureManager.add("mexico", loadTexture("assets/Textures/Tiles/mexico.png"));
   this->textureManager.add("pvc", loadTexture("assets/Textures/Tiles/pvc.png"));
-  this->textureManager.add("coin-1", loadTexture("assets/Textures/Items/coin-1.png"));
   this->textureManager.add("box", loadTexture("assets/Textures/Tiles/box.png"));
+  
+  // Items
+  this->textureManager.add("coin-1", loadTexture("assets/Textures/Items/coin-1.png"));
+  this->textureManager.add("xiao", loadTexture("assets/Textures/Items/xiao.png"));
+
+  // Interface
   this->textureManager.add("heart-full", loadTexture("assets/Textures/Interface/heart-full.png"));
   this->textureManager.add("inventory-box", loadTexture("assets/Textures/Interface/inventory-box.png"));
   this->textureManager.add("inventory-box-active", loadTexture("assets/Textures/Interface/inventory-box-active.png"));
@@ -189,6 +197,15 @@ void Game::initTexts()
   std::stringstream versionStream;
   versionStream << GAME_TITLE << '\n' << GAME_VERSION;
   this->versionText.setString(versionStream.str());
+
+  // Item Count Text
+  this->itemCountText.setFont(this->fontManager.get("terminus"));
+  this->itemCountText.setFillColor(sf::Color::White);
+  this->itemCountText.setCharacterSize(ITEM_FONT_SIZE);
+  this->itemCountText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS);
+
+  this->playerInventory[PLAYER_INVENTORY_SIZE - 1].name = "xiao";
+  this->playerInventory[PLAYER_INVENTORY_SIZE - 1].count = 7;
 }
 
 // Constructor and Destructor
@@ -206,6 +223,7 @@ Game::Game()
   this->heartShape.setTexture(&this->textureManager.get("heart-full"));
   this->heartShape.setSize(sf::Vector2f(HEART_SIZE, HEART_SIZE));
   this->inventoryBoxShape.setSize(sf::Vector2f(INVENTORY_BOX_SIZE, INVENTORY_BOX_SIZE));
+  this->inventoryItemShape.setSize(sf::Vector2f(ITEM_SIZE, ITEM_SIZE));
 }
 
 Game::~Game()
@@ -455,11 +473,33 @@ void Game::renderUI()
     // Setting the inventory box texture
     this->inventoryBoxShape.setTexture(&this->textureManager.get(i == this->activeInventorySlot ? "inventory-box-active" : "inventory-box"));
   
+    // Rendering the inventoryy boxes
     this->inventoryBoxShape.setPosition(sf::Vector2f(
       this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET + i * (INVENTORY_BOX_SIZE - 1.f),
       this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryBoxShape.getGlobalBounds().width - TEXT_OFFSET
     ));
+    if (this->playerInventory[i].count > 0) {
+      // Item count
+      this->itemCountText.setString(std::to_string(this->playerInventory[i].count));
+      this->itemCountText.setPosition(sf::Vector2f(
+        this->inventoryBoxShape.getGlobalBounds().left + INVENTORY_BOX_SIZE - this->itemCountText.getGlobalBounds().width - 4.f,
+        this->inventoryBoxShape.getGlobalBounds().top + INVENTORY_BOX_SIZE - this->itemCountText.getGlobalBounds().height - 4.f
+      ));
+
+      // Item texture
+      this->inventoryItemShape.setTexture(&this->textureManager.get(this->playerInventory[i].name));
+      this->inventoryItemShape.setPosition(sf::Vector2f(
+        this->inventoryBoxShape.getGlobalBounds().left + (INVENTORY_BOX_SIZE - ITEM_SIZE) / 2,
+        this->inventoryBoxShape.getGlobalBounds().top + (INVENTORY_BOX_SIZE - ITEM_SIZE) / 2
+      ));
+    } else {
+      this->itemCountText.setString("");
+    }
+
+    // Rendering the inventory
     this->window->draw(this->inventoryBoxShape);
+    this->window->draw(this->inventoryItemShape);
+    this->window->draw(this->itemCountText);
   }
 }
 
