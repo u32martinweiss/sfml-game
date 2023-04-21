@@ -66,6 +66,7 @@ void Game::initTextures()
   this->textureManager.add("pvc", loadTexture("assets/Textures/Tiles/pvc.png"));
   this->textureManager.add("coin-1", loadTexture("assets/Textures/Items/coin-1.png"));
   this->textureManager.add("box", loadTexture("assets/Textures/Tiles/box.png"));
+  this->textureManager.add("heart-full", loadTexture("assets/Textures/Interface/heart-full.png"));
 }
 
 void Game::initBackgroundRects()
@@ -206,6 +207,12 @@ Game::Game()
   this->initFonts();
   this->initTexts();
   this->player.setTexture(&this->textureManager.get("player"));
+  this->heartShape.setTexture(&this->textureManager.get("heart-full"));
+  this->heartShape.setSize(sf::Vector2f(24.f, 24.f));
+  this->heartShape.setPosition(sf::Vector2f(
+    0.f,
+    0.f
+  ));
 }
 
 Game::~Game()
@@ -432,6 +439,18 @@ void Game::renderItems()
   }
 }
 
+void Game::renderUI()
+{
+  for (int i = 0; i < this->playerHealth; i++)
+  {
+    this->heartShape.setPosition(sf::Vector2f(
+      this->view.getCenter().x + this->view.getSize().x / 2 - this->heartShape.getGlobalBounds().width - 16.f - i * 32.f,
+      this->view.getCenter().y + this->view.getSize().y / 2 - this->heartShape.getGlobalBounds().width - 16.f
+    ));
+    this->window->draw(this->heartShape);
+  }
+}
+
 void Game::renderTexts()
 {
   this->window->draw(this->debugText);
@@ -446,6 +465,7 @@ void Game::render()
   this->renderBlocks();
   this->renderItems();
   this->player.render(*this->window);
+  this->renderUI();
   this->renderTexts();
   this->window->display();
 }

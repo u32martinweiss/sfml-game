@@ -33,6 +33,10 @@ class Game
     Player player;
     InventoryItem playerInventory[PLAYER_INVENTORY_SIZE];
     unsigned int playerMoney = 0;
+    unsigned int playerHealth = 3;
+
+    // Testing
+    sf::RectangleShape heartShape;
 
     // Managers
     Manager<sf::Texture> textureManager;
@@ -79,6 +83,7 @@ class Game
     void renderBackgroundRects();
     void renderBlocks();
     void renderItems();
+    void renderUI();
     void renderTexts();
     void render();
 
