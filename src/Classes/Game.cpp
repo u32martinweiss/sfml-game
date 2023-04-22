@@ -332,32 +332,44 @@ void Game::updateKeys()
 
   // Inventory Keybindings
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num1)) this->activeInventorySlot = 0;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num2)) this->activeInventorySlot = 1;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num3)) this->activeInventorySlot = 2;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num4)) this->activeInventorySlot = 3;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num5)) this->activeInventorySlot = 4;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num6)) this->activeInventorySlot = 5;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) this->activeInventorySlot = 6;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) this->activeInventorySlot = 7;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) this->activeInventorySlot = 8;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num2)) this->activeInventorySlot = 1;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num3)) this->activeInventorySlot = 2;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num4)) this->activeInventorySlot = 3;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num5)) this->activeInventorySlot = 4;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num6)) this->activeInventorySlot = 5;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) this->activeInventorySlot = 6;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) this->activeInventorySlot = 7;
+  else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) this->activeInventorySlot = 8;
 
-  // Spwaning Bullets
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && this->bulletTime > BULLET_RELOAD_TIME && this->playerBullets > 0)
+  this->player.move(finalMovementVector);
+}
+
+void Game::updateMouse()
+{
+  // Spawning Bullets
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->bulletTime > BULLET_RELOAD_TIME && this->playerBullets > 0)
   {
+    sf::Vector2f mousePos(sf::Mouse::getPosition(*this->window));
+    sf::Vector2f playerCenter(
+      this->window->getSize().x / 2 + this->player.getBounds().width / 2,
+      this->window->getSize().y / 2 + this->player.getBounds().height / 2
+    );
+    sf::Vector2f delta(mousePos + sf::Vector2f(BULLET_SIZE * 2, BULLET_SIZE * 2) - playerCenter);
+    delta /= sqrtf(pow(delta.x, 2) + pow(delta.y, 2));
+
     this->bullets.push_back(
       Bullet(
         sf::Vector2f(
           this->player.getBounds().left + TILE_SIZE / 2 - BULLET_SIZE / 2,
           this->player.getBounds().top + TILE_SIZE / 2 - BULLET_SIZE / 2
         ),
+        delta,
         &this->textureManager.get("bullet")
       )
     );
     this->bulletClock.restart();
     this->playerBullets--;
   }
-
-  this->player.move(finalMovementVector);
 }
 
 void Game::updateBullets()
@@ -374,7 +386,8 @@ void Game::updateBullets()
 
 void Game::updateIntersections()
 {
-  auto iter = std::remove_if(this->items.begin(), this->items.end(), [&](Item& item) {
+  // Player and Item collisions
+  auto itemIter = std::remove_if(this->items.begin(), this->items.end(), [&](Item& item) {
     if (Collisions::Intersection(player.getBounds(), item.getBounds()))
     {
       this->playerMoney += item.getMoneyValue();
@@ -383,8 +396,19 @@ void Game::updateIntersections()
     }
     return false;
   });
+  this->items.erase(itemIter, this->items.end());
 
-  this->items.erase(iter, this->items.end());
+  // Bullet and Block collisions
+  for (Block block: this->blocks)
+  {
+    for (int i = 0; i < this->bullets.size(); i++)
+    {
+      if (Collisions::Intersection(block.getBounds(), this->bullets[i].getBounds()))
+      {
+        this->bullets.erase(this->bullets.begin() + i);
+      }
+    }
+  }
 }
 
 void Game::updateCollisions()
@@ -492,6 +516,7 @@ void Game::update()
   this->updateSFMLEvent();
   this->updateClocks();
   this->updateKeys();
+  this->updateMouse();
   this->updateBullets();
   this->updateCollisions();
   this->player.update();

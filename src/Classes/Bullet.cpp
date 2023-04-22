@@ -13,11 +13,12 @@ void Bullet::initShape(sf::Vector2f position)
 
 // Constructor
 
-Bullet::Bullet(sf::Vector2f position, sf::Texture* texture)
+Bullet::Bullet(sf::Vector2f position, const sf::Vector2f movement, sf::Texture* texture)
 {
   this->initShape(position);
-  this->speed = BULLET_SPEED;
+  this->movement = movement;
   this->shape.setTexture(texture);
+  this->speed = BULLET_SPEED;
 }
 
 // Accessors
@@ -31,7 +32,7 @@ const float Bullet::getDespawnTime() const
 
 void Bullet::update()
 {
-
+  this->shape.move(this->movement * game.getDt() * BULLET_SPEED);
 }
 
 void Bullet::render(sf::RenderTarget& target)

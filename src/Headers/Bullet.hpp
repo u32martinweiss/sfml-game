@@ -9,7 +9,9 @@
 class Bullet : public Entity
 {
   private:
-  // Despawn Clock
+    sf::Vector2f movement;
+
+    // Despawn Clock
     sf::Clock despawnClock;
 
     // Initializers
@@ -17,7 +19,7 @@ class Bullet : public Entity
 
   public:
     // Constructor
-    Bullet(sf::Vector2f position, sf::Texture* texture);
+    Bullet(sf::Vector2f position, const sf::Vector2f movement, sf::Texture* texture);
 
     // Accessors
     const float getDespawnTime() const;
