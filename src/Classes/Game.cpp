@@ -217,6 +217,12 @@ void Game::initTexts()
   versionStream << GAME_TITLE << '\n' << GAME_VERSION;
   this->versionText.setString(versionStream.str());
 
+  // Coins Text
+  this->coinsText.setFont(this->fontManager.get("terminus"));
+  this->coinsText.setFillColor(sf::Color::White);
+  this->coinsText.setCharacterSize(BASE_FONT_SIZE);
+  this->coinsText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS);
+
   // Item Count Text
   this->itemCountText.setFont(this->fontManager.get("terminus"));
   this->itemCountText.setFillColor(sf::Color::White);
@@ -226,11 +232,8 @@ void Game::initTexts()
   // Bullet Count Text
   this->bulletCountText.setFont(this->fontManager.get("terminus"));
   this->bulletCountText.setFillColor(sf::Color::White);
-  this->bulletCountText.setCharacterSize(ITEM_FONT_SIZE);
+  this->bulletCountText.setCharacterSize(BASE_FONT_SIZE);
   this->bulletCountText.setOutlineThickness(BASE_FONT_OUTLINE_THICKNESS);
-
-  this->playerInventory[PLAYER_INVENTORY_SIZE - 1].name = "xiao";
-  this->playerInventory[PLAYER_INVENTORY_SIZE - 1].count = 7;
 }
 
 void Game::initInterface()
@@ -240,7 +243,7 @@ void Game::initInterface()
   this->inventoryBoxShape.setSize(sf::Vector2f(INVENTORY_BOX_SIZE, INVENTORY_BOX_SIZE));
   this->inventoryItemShape.setSize(sf::Vector2f(ITEM_SIZE, ITEM_SIZE));
   this->bulletsShape.setTexture(&this->textureManager.get("bullets"));
-  this->bulletsShape.setSize(sf::Vector2f(22.f, 22.f));
+  this->bulletsShape.setSize(sf::Vector2f(GUI_ITEM_SIZE, GUI_ITEM_SIZE));
 }
 
 // Constructor and Destructor
@@ -256,6 +259,10 @@ Game::Game()
   this->initTexts();
   this->initInterface();
   this->player.setTexture(&this->textureManager.get("player"));
+
+  // Inventory Testing
+  this->playerInventory[PLAYER_INVENTORY_SIZE - 1].name = "xiao";
+  this->playerInventory[PLAYER_INVENTORY_SIZE - 1].count = 7;
 }
 
 Game::~Game()
@@ -500,10 +507,19 @@ void Game::updateTexts()
 
   // Bullet Count Text
   this->bulletCountText.setPosition(sf::Vector2f(
-    this->view.getCenter().x + this->view.getSize().x / 2 - this->bulletCountText.getGlobalBounds().width - this->bulletsShape.getGlobalBounds().width - TEXT_OFFSET - 8.f,
-    this->view.getCenter().y + this->view.getSize().y / 2 - this->bulletCountText.getGlobalBounds().height - this->bulletsShape.getGlobalBounds().height
+    this->view.getCenter().x + this->view.getSize().x / 2 - this->bulletCountText.getGlobalBounds().width - GUI_ITEM_SIZE - TEXT_OFFSET - 8.f,
+    this->view.getCenter().y + this->view.getSize().y / 2 - this->bulletCountText.getGlobalBounds().height - GUI_ITEM_SIZE
   ));
   this->bulletCountText.setString(std::to_string(this->playerBullets));
+
+  // Coins Text
+  this->coinsText.setString(
+    "Coins: " + std::to_string(this->playerMoney) + " CZK"
+  );
+  this->coinsText.setPosition(sf::Vector2f(
+    this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET,
+    this->view.getCenter().y + this->view.getSize().y / 2 - this->coinsText.getGlobalBounds().height - INVENTORY_BOX_SIZE - HEART_SIZE * 2.f - TEXT_OFFSET
+  ));
 }
 
 void Game::updateInventory()
@@ -579,7 +595,7 @@ void Game::renderInterface()
     // Rendering the inventory boxes
     this->inventoryBoxShape.setPosition(sf::Vector2f(
       this->view.getCenter().x - this->view.getSize().x / 2 + TEXT_OFFSET + i * (INVENTORY_BOX_SIZE - 1.f),
-      this->view.getCenter().y + this->view.getSize().y / 2 - this->inventoryBoxShape.getGlobalBounds().width - TEXT_OFFSET
+      this->view.getCenter().y + this->view.getSize().y / 2 - INVENTORY_BOX_SIZE - TEXT_OFFSET
     ));
     if (this->playerInventory[i].count > 0) {
       // Item count
@@ -606,8 +622,8 @@ void Game::renderInterface()
   }
 
   this->bulletsShape.setPosition(sf::Vector2f(
-    this->view.getCenter().x + this->view.getSize().x / 2 - this->bulletsShape.getGlobalBounds().width - TEXT_OFFSET,
-    this->view.getCenter().y + this->view.getSize().y / 2 - this->bulletsShape.getGlobalBounds().height - TEXT_OFFSET
+    this->view.getCenter().x + this->view.getSize().x / 2 - GUI_ITEM_SIZE - TEXT_OFFSET,
+    this->view.getCenter().y + this->view.getSize().y / 2 - GUI_ITEM_SIZE - TEXT_OFFSET
   ));
   this->window->draw(this->bulletsShape);
 }
@@ -616,6 +632,7 @@ void Game::renderTexts()
 {
   this->window->draw(this->debugText);
   this->window->draw(this->versionText);
+  this->window->draw(this->coinsText);
   this->window->draw(this->bulletCountText);
 }
 

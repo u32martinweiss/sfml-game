@@ -42,7 +42,6 @@ class Game
     int activeInventorySlot = 0;
     sf::RectangleShape heartShape;
     sf::RectangleShape inventoryBoxShape;
-    sf::Text itemCountText;
     sf::RectangleShape inventoryItemShape;
     sf::RectangleShape bulletsShape;
 
@@ -53,6 +52,8 @@ class Game
     // Texts
     sf::Text debugText;
     sf::Text versionText;
+    sf::Text coinsText;
+    sf::Text itemCountText;
     sf::Text bulletCountText;
 
     // Clocks
