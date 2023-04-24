@@ -13,6 +13,7 @@
 #include "BackgroundRect.hpp"
 #include "Block.hpp"
 #include "Item.hpp"
+#include "Bullet.hpp"
 #include "Collisions.hpp"
 #include "Manager.hpp"
 #include "../Structs/InventoryItem.hpp"
@@ -28,6 +29,7 @@ class Game
     std::vector<BackgroundRect> backgroundRects;
     std::vector<Block> blocks;
     std::vector<Item> items;
+    std::vector<Bullet> bullets;
 
     // Player
     Player player;
@@ -40,7 +42,6 @@ class Game
     int activeInventorySlot = 0;
     sf::RectangleShape heartShape;
     sf::RectangleShape inventoryBoxShape;
-    sf::Text itemCountText;
     sf::RectangleShape inventoryItemShape;
     sf::RectangleShape bulletsShape;
 
@@ -51,11 +52,15 @@ class Game
     // Texts
     sf::Text debugText;
     sf::Text versionText;
+    sf::Text coinsText;
+    sf::Text itemCountText;
     sf::Text bulletCountText;
 
     // Clocks
     sf::Clock dtClock;
     float dt;
+    sf::Clock bulletClock;
+    float bulletTime;
 
     // Initalizers
     void initWindow();
@@ -79,6 +84,8 @@ class Game
     void updateSFMLEvent();
     void updateClocks();
     void updateKeys();
+    void updateMouse();
+    void updateBullets();
     void updateIntersections();
     void updateCollisions();
     void updateView();
@@ -90,6 +97,7 @@ class Game
     void renderBackgroundRects();
     void renderBlocks();
     void renderItems();
+    void renderBullets();
     void renderInterface();
     void renderTexts();
     void render();

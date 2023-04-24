@@ -2,6 +2,7 @@
 #define PLAYER_HPP
 
 #include <SFML/Graphics.hpp>
+#include <math.h>
 
 #include "../Constants.hpp"
 #include "Entity.hpp"

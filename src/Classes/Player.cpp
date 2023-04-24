@@ -1,6 +1,3 @@
-#include <SFML/Graphics.hpp>
-#include <math.h>
-
 #include "../Headers/Player.hpp"
 #include "../Headers/Game.hpp"
 

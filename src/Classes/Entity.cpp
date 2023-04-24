@@ -2,7 +2,7 @@
 
 // Mutators
 
-void Entity::setTexture(sf::Texture *texture)
+void Entity::setTexture(sf::Texture* texture)
 {
   this->shape.setTexture(texture);
 }
